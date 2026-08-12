@@ -50,6 +50,7 @@ Essa arquitetura permitiu reproduzir um cenário semelhante ao encontrado em red
 
 > **A figura abaixo apresenta a arquitetura de rede utilizada durante o desenvolvimento e a validação deste projeto.**
 
-![Arquitetura da Rede](images/arquitetura/topologia.png)
+
+![Arquitetura da Rede](Arquitetura-TCC.drawio(2).png)
 
  
