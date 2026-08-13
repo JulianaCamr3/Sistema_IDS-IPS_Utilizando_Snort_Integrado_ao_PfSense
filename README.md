@@ -38,6 +38,7 @@ Como alvo dos testes, foi utilizada a distribuição **Metasploitable2**, um sis
 ---
 
 ## 🌐 Arquitetura da Rede
+---
 
 Para garantir que todo o tráfego fosse analisado pelo sistema de detecção de intrusões, a máquina **Metasploitable2** foi configurada para utilizar o **pfSense** como gateway padrão. Dessa forma, a máquina vulnerável não era exposta diretamente à Internet, fazendo com que toda comunicação entre a máquina atacante e o servidor passasse obrigatoriamente pelo firewall, permitindo ao **Snort** inspecionar os pacotes e aplicar suas regras de detecção e prevenção.
 
@@ -51,6 +52,41 @@ Essa arquitetura permitiu reproduzir um cenário semelhante ao encontrado em red
 > **A figura abaixo apresenta a arquitetura de rede utilizada durante o desenvolvimento e a validação deste projeto.**
 
 
-![Arquitetura da Rede](Arquitetura_TCC.drawio (2).png)
+![Arquitetura da Rede](imagens/Arquitetura_TCC.drawio%20(2).png)
+---
+
+## Testes Realizados e Regras Monitoradas no Snort
+---
+
+
+Para a realização dos testes, eu utilizei as ferramentas **Nmap** e **Curl** no Ubuntu. De acordo com o framework **Mitre Att&ck**, uma das táticas utilizadas por agentes mal-intencionados é o "Reconhecimento"[Reconnaissance - TA0043] em que eles buscam informações sobre a redes, os sistemas utilizados pelas empresas, dentre outras, para planejarem futuros ataques. 
+
+Assim, umas das técnicas usadas pelos adversários é o *Active Scanning*[T1595] que eu simulei usando o Nmap. O Nmap é uma ferramenta de código aberto usada tanto por administradores de rede e profissionais de cibersegurança quanto por agentes mal-intencionados para verificar o status da rede e também auditorias de segurança, que fornece vários tipos de varreduras de rede para diferentes propósitos como a verificação de quais hosts estão disponíveis, quais serviços e protocolos eles usam, qual sistema operacional os hosts utilizam, dentre outras informações importantes para um bom diagnóstico de rede.
+
+### Primeiro Teste 
+--- 
+
+O primeiro teste foi uma varredura genérica, utilizando o parâmetro *-f* para fragmentar os pacotes IP transmitidos durante a comunicação. Esse parâmetro foi utilizado pois é uma das técnicas para impedir que sistemas IDS/IPS como o Snort consigam identificar a varredura. Na imagem ![NmapFragmentado](imagens/SimulacaoScanFragmentado.jpeg) está a execução desse comando. 
+
+No Snort, foram acionadas apenas as regras relacionadas com os testes realizados para evitar o acúmulo de falsos positivos. Nesse contexto, as regras acionadas para esse teste foram: 
+
+- emerging-scan.rules
+- snort_indicator-scan-rules
+
+Durante os testes verificou-se que o Snort conseguiu detectar e bloquear a simulação de um Nmap com pacotes fragmentados, o que demonstrou a eficiência dessa ferramenta e seu potencial para proteger redes corporativas. A seguir, temos o print da detecção e o bloqueio da máquina Ubuntu ![DetecçãoNmapFragmentado](imagens/SnortDetectandoNmapFragmentado.png) ![BloqueioNmapFragmentado](imagens/SnortBloqueandoNmapFragmentado.png)
+
+### Segundo teste
+---
+
+O segundo teste consistiu de uma varredura para descoberta de versões de serviços utilizando o parâmetro do Nmap *-sV*.Esse tipo de escaneamento permite identificar não apenas as portas abertas em um host, mas também as versões dos serviços em execução, fornecendo informações que podem auxiliar na identificação de vulnerabilidades conhecidas associadas a versões específicas de softwares.
+
+Na imagem ![ComandoNmapsV](imagens/ComandoNmapsV.jpeg) está a execução do comando na máquina Ubuntu.
+
+No Snort, essa varredura também foi detectada, o que demonstra o quanto as regras dessa ferramenta foram bem definidas e conseguem detectar diferentes variações de um escaneamento da rede.Na imagem a seguir, temos o print da detecção pelo Snort:
+
+![DetecçãoNmapsV](imagens/SnortDetectandonmapsv.png)
+---
+
+
 
  
